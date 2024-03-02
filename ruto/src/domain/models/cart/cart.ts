@@ -17,8 +17,8 @@ export class Cart extends Entity<CartProps> {
     return Right.create(cart);
   }
 
-  public static reconstitute(props: CartProps): Cart {
-    return new Cart(props);
+  public static reconstitute(id: UUID, props: CartProps): Cart {
+    return new Cart(props, id);
   }
 
   public addItem(productId: string, unitPrice: number, quantity: number): Either<Failure, void> {
@@ -48,9 +48,22 @@ export class Cart extends Entity<CartProps> {
     return Right.create(undefined);
   }
 
-  public removeItem(itemId: UUID): void {
-    const items: CartItem[] = this.props.items.filter((item) => item.id.value !== itemId.value);
+  public removeItem(productId: UUID): Either<Failure, void> {
+    if (this.props.items.length === 0) {
+      const failure = new Failure("CART_IS_EMPTY");
+      return Left.create(failure);
+    }
+
+    const itemIndex = this.props.items.findIndex((item) => item.productId.isEquals(productId));
+
+    if (itemIndex === -1) {
+      const failure = new Failure("PRODUCT_NOT_FOUND_IN_CART");
+      return Left.create(failure);
+    }
+
+    const items: CartItem[] = this.props.items.filter((item) => !item.productId.isEquals(productId));
     this.props.items = items;
+    return Right.create(undefined);
   }
 
   public totalQuantity(): number {

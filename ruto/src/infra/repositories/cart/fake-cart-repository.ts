@@ -1,8 +1,9 @@
+import { UUID } from "@shared/domain/models/uuid";
+
+import { Money } from "@domain/models/money";
 import { Cart } from "@domain/models/cart/cart";
 import { CartItem } from "@domain/models/cart/cart-item";
 import { CartRepository } from "@domain/models/cart/cart-repository";
-import { Money } from "@domain/models/money";
-import { UUID } from "@shared/domain/models/uuid";
 
 export type FakeCartDTO = {
   id: string;
@@ -36,7 +37,7 @@ export class FakeCartRepository implements CartRepository {
 
     if (!cart) return null;
 
-    return Cart.reconstitute({
+    return Cart.reconstitute(UUID.reconstitute({ value: cart.id }), {
       customerId: UUID.reconstitute({ value: cart.customerId }),
       items: cart.items.map((item) =>
         CartItem.reconstitute(UUID.reconstitute({ value: item.id }), {
