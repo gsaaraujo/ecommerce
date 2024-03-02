@@ -4,6 +4,7 @@ import { Either, Left, Right } from "@shared/helpers/either";
 
 import { Cart } from "@domain/models/cart/cart";
 import { CartRepository } from "@domain/models/cart/cart-repository";
+import { CustomerGateway } from "@application/gateways/customer-gateway";
 
 type Input = {
   customerId: string;
@@ -16,9 +17,11 @@ type Output = void;
 
 export class AddProductToCart {
   private readonly cartRepository: CartRepository;
+  private readonly customerGateway: CustomerGateway;
 
-  public constructor(cartRepository: CartRepository) {
+  public constructor(cartRepository: CartRepository, customerGateway: CustomerGateway) {
     this.cartRepository = cartRepository;
+    this.customerGateway = customerGateway;
   }
 
   async execute(input: Input): Promise<Either<Failure, Output>> {
@@ -26,6 +29,13 @@ export class AddProductToCart {
 
     if (customerId.isLeft()) {
       return Left.create(customerId.value);
+    }
+
+    const customerExists: boolean = await this.customerGateway.exists(customerId.value.value);
+
+    if (!customerExists) {
+      const failure = new Failure("CUSTOMER_NOT_FOUND");
+      return Left.create(failure);
     }
 
     const cart: Cart | null = await this.cartRepository.findOneByCustomerId(customerId.value.value);
