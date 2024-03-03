@@ -4,6 +4,7 @@ import { Failure } from "@shared/helpers/failure";
 import { Either, Left, Right } from "@shared/helpers/either";
 
 import { Money } from "@domain/models/money";
+import { Quantity } from "@domain/models/quantity";
 import { CartItem } from "@domain/models/cart/cart-item";
 
 type CartProps = {
@@ -21,10 +22,7 @@ export class Cart extends Entity<CartProps> {
     return new Cart(props, id);
   }
 
-  public addItem(productId: string, unitPrice: number, quantity: number): Either<Failure, void> {
-    const newProductId = UUID.create({ value: productId });
-    if (newProductId.isLeft()) return Left.create(newProductId.value);
-
+  public addItem(productId: UUID, unitPrice: Money, quantity: Quantity): Either<Failure, void> {
     const itemFound = this.props.items.find((item) => item.productId.isEquals(item.id));
 
     if (itemFound) {
@@ -32,16 +30,7 @@ export class Cart extends Entity<CartProps> {
       return Right.create(undefined);
     }
 
-    const newUnitPrice = Money.create({ value: unitPrice });
-
-    if (newUnitPrice.isLeft()) return Left.create(newUnitPrice.value);
-
-    const cartItem = CartItem.create({
-      productId: newProductId.value,
-      unitPrice: newUnitPrice.value,
-      quantity,
-    });
-
+    const cartItem = CartItem.create({ productId, unitPrice, quantity });
     if (cartItem.isLeft()) return Left.create(cartItem.value);
 
     this.props.items.push(cartItem.value);
@@ -67,11 +56,11 @@ export class Cart extends Entity<CartProps> {
   }
 
   public totalQuantity(): number {
-    return this.props.items.reduce((acc, item) => acc + item.quantity, 0);
+    return this.props.items.reduce((acc, item) => acc + item.quantity.value, 0);
   }
 
   public totalPrice(): number {
-    return this.props.items.reduce((acc, item) => acc + item.unitPrice.value * item.quantity, 0);
+    return this.props.items.reduce((acc, item) => acc + item.unitPrice.value * item.quantity.value, 0);
   }
 
   public get customerId(): UUID {

@@ -4,11 +4,12 @@ import { UUID } from "@shared/domain/models/uuid";
 import { Either, Right } from "@shared/helpers/either";
 
 import { Money } from "@domain/models/money";
+import { Quantity } from "@domain/models/quantity";
 
 type CartItemProps = {
   productId: UUID;
   unitPrice: Money;
-  quantity: number;
+  quantity: Quantity;
 };
 
 export class CartItem extends Entity<CartItemProps> {
@@ -21,8 +22,8 @@ export class CartItem extends Entity<CartItemProps> {
     return new CartItem(props, id);
   }
 
-  public increaseQuantity(quantity: number): void {
-    this.props.quantity += quantity;
+  public increaseQuantity(quantity: Quantity): void {
+    this.props.quantity = quantity;
   }
 
   get productId(): UUID {
@@ -33,7 +34,7 @@ export class CartItem extends Entity<CartItemProps> {
     return this.props.unitPrice;
   }
 
-  get quantity(): number {
+  get quantity(): Quantity {
     return this.props.quantity;
   }
 }

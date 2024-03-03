@@ -1,9 +1,12 @@
-import { Failure } from "@shared/helpers/failure";
 import { UUID } from "@shared/domain/models/uuid";
+import { Failure } from "@shared/helpers/failure";
 import { Either, Left, Right } from "@shared/helpers/either";
 
+import { Money } from "@domain/models/money";
 import { Cart } from "@domain/models/cart/cart";
+import { Quantity } from "@domain/models/quantity";
 import { CartRepository } from "@domain/models/cart/cart-repository";
+
 import { CustomerGateway } from "@application/gateways/customer-gateway";
 
 type Input = {
@@ -25,13 +28,17 @@ export class AddProductToCart {
   }
 
   async execute(input: Input): Promise<Either<Failure, Output>> {
-    const customerId: Either<Failure, UUID> = UUID.create({ value: input.customerId });
+    const customerId = UUID.create({ value: input.customerId });
+    const productId = UUID.create({ value: input.productId });
+    const unitPrice = Money.create({ value: input.unitPrice });
+    const quantity = Quantity.create({ value: input.quantity });
 
-    if (customerId.isLeft()) {
-      return Left.create(customerId.value);
-    }
+    if (customerId.isLeft()) return Left.create(customerId.value);
+    if (productId.isLeft()) return Left.create(productId.value);
+    if (unitPrice.isLeft()) return Left.create(unitPrice.value);
+    if (quantity.isLeft()) return Left.create(quantity.value);
 
-    const customerExists: boolean = await this.customerGateway.exists(customerId.value.value);
+    const customerExists = await this.customerGateway.exists(customerId.value.value);
 
     if (!customerExists) {
       const failure = new Failure("CUSTOMER_NOT_FOUND");
@@ -47,12 +54,12 @@ export class AddProductToCart {
         return Left.create(newCart.value);
       }
 
-      newCart.value.addItem(input.productId, input.unitPrice, input.quantity);
+      newCart.value.addItem(productId.value, unitPrice.value, quantity.value);
       await this.cartRepository.create(newCart.value);
       return Right.create(undefined);
     }
 
-    cart.addItem(input.productId, input.unitPrice, input.quantity);
+    cart.addItem(productId.value, unitPrice.value, quantity.value);
     await this.cartRepository.update(cart);
     return Right.create(undefined);
   }

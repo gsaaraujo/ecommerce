@@ -14,7 +14,7 @@ describe("uuid", () => {
   });
 
   it("should fail if uuid is invalid", () => {
-    const failure = new Failure("INVALID_UID");
+    const failure = new Failure("INVALID_UUID");
 
     const sut = UUID.create({ value: "123abc" });
 

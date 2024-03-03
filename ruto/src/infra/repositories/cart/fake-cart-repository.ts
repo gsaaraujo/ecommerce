@@ -2,6 +2,7 @@ import { UUID } from "@shared/domain/models/uuid";
 
 import { Money } from "@domain/models/money";
 import { Cart } from "@domain/models/cart/cart";
+import { Quantity } from "@domain/models/quantity";
 import { CartItem } from "@domain/models/cart/cart-item";
 import { CartRepository } from "@domain/models/cart/cart-repository";
 
@@ -27,7 +28,7 @@ export class FakeCartRepository implements CartRepository {
       items: cart.items.map((item) => ({
         id: item.id.value,
         productId: item.productId.value,
-        quantity: item.quantity,
+        quantity: item.quantity.value,
       })),
     });
   }
@@ -43,7 +44,7 @@ export class FakeCartRepository implements CartRepository {
         CartItem.reconstitute(UUID.reconstitute({ value: item.id }), {
           productId: UUID.reconstitute({ value: item.productId }),
           unitPrice: Money.reconstitute({ value: 25.5 }),
-          quantity: item.quantity,
+          quantity: Quantity.reconstitute({ value: item.quantity }),
         }),
       ),
     });
@@ -58,7 +59,7 @@ export class FakeCartRepository implements CartRepository {
       items: cart.items.map((item) => ({
         id: item.id.value,
         productId: item.productId.value,
-        quantity: item.quantity,
+        quantity: item.quantity.value,
       })),
     };
   }
