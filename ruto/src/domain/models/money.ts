@@ -1,5 +1,5 @@
 import { Failure } from "@shared/helpers/failure";
-import { Either, Right } from "@shared/helpers/either";
+import { Either, Left, Right } from "@shared/helpers/either";
 
 type MoneyProps = {
   value: number;
@@ -13,7 +13,12 @@ export class Money {
   }
 
   public static create(props: MoneyProps): Either<Failure, Money> {
-    const money = new Money(props);
+    if (props.value < 0) {
+      const failure = new Failure("MONEY_CANNOT_BE_NEGATIVE");
+      return Left.create(failure);
+    }
+
+    const money = new Money({ value: Number(props.value.toFixed(2)) });
     return Right.create(money);
   }
 

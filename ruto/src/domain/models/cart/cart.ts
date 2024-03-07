@@ -23,7 +23,7 @@ export class Cart extends Entity<CartProps> {
   }
 
   public addItem(productId: UUID, unitPrice: Money, quantity: Quantity): Either<Failure, void> {
-    const itemFound = this.props.items.find((item) => item.productId.isEquals(item.id));
+    const itemFound = this.props.items.find((item) => item.productId.isEquals(productId));
 
     if (itemFound) {
       itemFound.increaseQuantity(quantity);
@@ -55,12 +55,25 @@ export class Cart extends Entity<CartProps> {
     return Right.create(undefined);
   }
 
-  public totalQuantity(): number {
-    return this.props.items.reduce((acc, item) => acc + item.quantity.value, 0);
+  public totalQuantity(): Either<Failure, Quantity> {
+    const quantitySum = this.props.items.reduce((acc, item) => acc + item.quantity.value, 0);
+    const quantity = Quantity.create({ value: quantitySum });
+    if (quantity.isLeft()) return Left.create(quantity.value);
+    return Right.create(quantity.value);
   }
 
-  public totalPrice(): number {
-    return this.props.items.reduce((acc, item) => acc + item.unitPrice.value * item.quantity.value, 0);
+  public totalPrice(): Either<Failure, Money> {
+    let sum = 0;
+
+    for (const item of this.props.items) {
+      const totalItemPrice = item.totalPrice();
+      if (totalItemPrice.isLeft()) return Left.create(totalItemPrice.value);
+      sum += totalItemPrice.value.value;
+    }
+
+    const money = Money.create({ value: sum });
+    if (money.isLeft()) return Left.create(money.value);
+    return Right.create(money.value);
   }
 
   public get customerId(): UUID {
