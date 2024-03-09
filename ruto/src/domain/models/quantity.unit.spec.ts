@@ -28,4 +28,12 @@ describe("quantity", () => {
 
     expect(sut.value).toStrictEqual(failure);
   });
+
+  it("should fail if quantity is not number", () => {
+    const failure = new Failure("QUANTITY_MUST_BE_NUMBER");
+
+    const sut = Quantity.create({ value: "0.5" as any });
+
+    expect(sut.value).toStrictEqual(failure);
+  });
 });

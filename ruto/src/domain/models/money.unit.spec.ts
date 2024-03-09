@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { Money } from "@domain/models/money";
+
 import { Failure } from "@shared/helpers/failure";
 
 describe("money", () => {
@@ -34,5 +35,13 @@ describe("money", () => {
     const sut = Money.create({ value: -1 });
 
     expect(sut.value).toStrictEqual(failure);
+  });
+
+  it("should fail if money is not number", () => {
+    const failure = new Failure("MONEY_MUST_BE_NUMBER");
+
+    const sut1 = Money.create({ value: "1" as any });
+
+    expect(sut1.value).toStrictEqual(failure);
   });
 });

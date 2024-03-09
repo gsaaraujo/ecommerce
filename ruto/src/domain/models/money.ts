@@ -13,6 +13,11 @@ export class Money {
   }
 
   public static create(props: MoneyProps): Either<Failure, Money> {
+    if (typeof props.value !== "number") {
+      const failure = new Failure("MONEY_MUST_BE_NUMBER");
+      return Left.create(failure);
+    }
+
     if (props.value < 0) {
       const failure = new Failure("MONEY_CANNOT_BE_NEGATIVE");
       return Left.create(failure);

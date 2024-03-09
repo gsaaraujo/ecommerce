@@ -13,6 +13,11 @@ export class Quantity {
   }
 
   public static create(props: QuantityProps): Either<Failure, Quantity> {
+    if (typeof props.value !== "number") {
+      const failure = new Failure("QUANTITY_MUST_BE_NUMBER");
+      return Left.create(failure);
+    }
+
     if (!Number.isInteger(props.value)) {
       const failure = new Failure("QUANTITY_CANNOT_BE_DECIMAL");
       return Left.create(failure);
