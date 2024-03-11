@@ -6,3 +6,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Cart {
+  id         String     @id @db.Uuid
+  customerId String     @unique @map("customer_id") @db.Uuid
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @default(now()) @updatedAt @map("updated_at")
+  cartItems  CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @db.Uuid
+  cartId    String   @unique @map("cart_id") @db.Uuid
+  productId String   @unique @map("product_id") @db.Uuid
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  Cart      Cart     @relation(fields: [cartId], references: [id])
+
+  @@map("cart_items")
+}

@@ -27,7 +27,7 @@ export class AddProductToCart {
     this.customerGateway = customerGateway;
   }
 
-  async execute(input: Input): Promise<Either<Failure, Output>> {
+  public async execute(input: Input): Promise<Either<Failure, Output>> {
     const customerId = UUID.create({ value: input.customerId });
     const productId = UUID.create({ value: input.productId });
     const unitPrice = Money.create({ value: input.unitPrice });
