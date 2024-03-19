@@ -3,7 +3,7 @@ version: "3"
 services:
   postgres:
     image: postgres:15.3
-    container_name: ruto-postgres
+    container_name: darunia-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
@@ -11,9 +11,9 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /data/postgres
     volumes:
-      - ruto-postgres:/data/postgres
+      - darunia-postgres:/data/postgres
     ports:
       - "5433:5432"
 
 volumes:
-  ruto-postgres:
+  darunia-postgres:
