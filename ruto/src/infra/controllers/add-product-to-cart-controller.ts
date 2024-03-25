@@ -26,7 +26,7 @@ export class AddProductToCartController {
   }
 
   @Post("carts/add-product")
-  async execute(@Body() input: Input): Promise<any> {
+  async execute(@Body() input: Input): Promise<unknown> {
     const schema = z.object({
       customerId: z
         .string({ required_error: "customerId is required", invalid_type_error: "customerId must be string" })
@@ -67,7 +67,7 @@ export class AddProductToCartController {
       return new Created({});
     }
 
-    switch (addProductToCart.value.message) {
+    switch (addProductToCart.getValue().getMessage()) {
       case "CUSTOMER_NOT_FOUND":
         throw new HttpException(
           new NotFound({

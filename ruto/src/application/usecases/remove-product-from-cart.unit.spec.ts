@@ -53,7 +53,7 @@ describe("remove-product-from-cart", () => {
     });
 
     expect(sut.isLeft()).toBeTruthy();
-    expect(sut.value).toStrictEqual(output);
+    expect(sut.getValue()).toStrictEqual(output);
   });
 
   it("should fail if cart is not found", async () => {
@@ -68,7 +68,7 @@ describe("remove-product-from-cart", () => {
     });
 
     expect(sut.isLeft()).toBeTruthy();
-    expect(sut.value).toStrictEqual(output);
+    expect(sut.getValue()).toStrictEqual(output);
   });
 
   it("should fail if cart is empty", async () => {
@@ -89,7 +89,7 @@ describe("remove-product-from-cart", () => {
     });
 
     expect(sut.isLeft()).toBeTruthy();
-    expect(sut.value).toStrictEqual(output);
+    expect(sut.getValue()).toStrictEqual(output);
   });
 
   it("should fail if cart does not have the product", async () => {
@@ -116,6 +116,6 @@ describe("remove-product-from-cart", () => {
     });
 
     expect(sut.isLeft()).toBeTruthy();
-    expect(sut.value).toStrictEqual(output);
+    expect(sut.getValue()).toStrictEqual(output);
   });
 });

@@ -81,6 +81,6 @@ describe("add-product-to-cart", () => {
     });
 
     expect(sut.isLeft()).toBeTruthy();
-    expect(sut.value).toStrictEqual(output);
+    expect(sut.getValue()).toStrictEqual(output);
   });
 });

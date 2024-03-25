@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { describe, expect, it } from "vitest";
 
 import { Failure } from "@shared/helpers/failure";
@@ -10,7 +12,7 @@ describe("quantity", () => {
 
     const sut = Quantity.create({ value: 10 });
 
-    expect(sut.value).toStrictEqual(quantity);
+    expect((sut.getValue() as Quantity).isEquals(quantity)).toBeTruthy();
   });
 
   it("should fail if quantity is negative", () => {
@@ -18,7 +20,7 @@ describe("quantity", () => {
 
     const sut = Quantity.create({ value: -1 });
 
-    expect(sut.value).toStrictEqual(failure);
+    expect(sut.getValue()).toStrictEqual(failure);
   });
 
   it("should fail if quantity is decimal", () => {
@@ -26,7 +28,7 @@ describe("quantity", () => {
 
     const sut = Quantity.create({ value: 0.5 });
 
-    expect(sut.value).toStrictEqual(failure);
+    expect(sut.getValue()).toStrictEqual(failure);
   });
 
   it("should fail if quantity is not number", () => {
@@ -34,6 +36,6 @@ describe("quantity", () => {
 
     const sut = Quantity.create({ value: "0.5" as any });
 
-    expect(sut.value).toStrictEqual(failure);
+    expect(sut.getValue()).toStrictEqual(failure);
   });
 });

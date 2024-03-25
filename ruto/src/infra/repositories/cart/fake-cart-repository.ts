@@ -23,12 +23,12 @@ export class FakeCartRepository implements CartRepository {
 
   async create(cart: Cart): Promise<void> {
     this.fakeCarts.push({
-      id: cart.id.value,
-      customerId: cart.customerId.value,
-      items: cart.items.map((item) => ({
-        id: item.id.value,
-        productId: item.productId.value,
-        quantity: item.quantity.value,
+      id: cart.getId().getValue(),
+      customerId: cart.getCustomerId().getValue(),
+      items: cart.getItems().map((item) => ({
+        id: item.getId().getValue(),
+        productId: item.getProductId().getValue(),
+        quantity: item.getQuantity().getValue(),
       })),
     });
   }
@@ -51,15 +51,17 @@ export class FakeCartRepository implements CartRepository {
   }
 
   async update(cart: Cart): Promise<void> {
-    const index: number = this.fakeCarts.findIndex((fakeCart) => fakeCart.customerId === cart.customerId.value);
+    const index: number = this.fakeCarts.findIndex(
+      (fakeCart) => fakeCart.customerId === cart.getCustomerId().getValue(),
+    );
 
     this.fakeCarts[index] = {
-      id: cart.id.value,
-      customerId: cart.customerId.value,
-      items: cart.items.map((item) => ({
-        id: item.id.value,
-        productId: item.productId.value,
-        quantity: item.quantity.value,
+      id: cart.getId().getValue(),
+      customerId: cart.getCustomerId().getValue(),
+      items: cart.getItems().map((item) => ({
+        id: item.getId().getValue(),
+        productId: item.getProductId().getValue(),
+        quantity: item.getQuantity().getValue(),
       })),
     };
   }

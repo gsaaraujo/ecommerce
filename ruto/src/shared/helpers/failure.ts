@@ -1,7 +1,11 @@
 export class Failure {
-  public constructor(private readonly _message: string) {}
+  private readonly message: string;
 
-  get message(): string {
-    return this._message;
+  public constructor(message: string) {
+    this.message = message;
+  }
+
+  public getMessage(): string {
+    return this.message;
   }
 }

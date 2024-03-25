@@ -1,17 +1,12 @@
 import { Failure } from "@shared/helpers/failure";
+import { ValueObject } from "@shared/helpers/value-object";
 import { Either, Left, Right } from "@shared/helpers/either";
 
 type MoneyProps = {
   value: number;
 };
 
-export class Money {
-  private readonly props: MoneyProps;
-
-  private constructor(props: MoneyProps) {
-    this.props = props;
-  }
-
+export class Money extends ValueObject<MoneyProps> {
   public static create(props: MoneyProps): Either<Failure, Money> {
     if (typeof props.value !== "number") {
       const failure = new Failure("MONEY_MUST_BE_NUMBER");
@@ -31,7 +26,7 @@ export class Money {
     return new Money(props);
   }
 
-  public get value(): number {
+  public getValue(): number {
     return this.props.value;
   }
 }

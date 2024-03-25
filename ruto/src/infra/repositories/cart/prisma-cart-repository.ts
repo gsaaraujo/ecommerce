@@ -18,15 +18,15 @@ export class PrismaCartRepository implements CartRepository {
   async create(cart: Cart): Promise<void> {
     await this.prismaClient.cart.create({
       data: {
-        id: cart.id.value,
-        customerId: cart.customerId.value,
+        id: cart.getId().getValue(),
+        customerId: cart.getCustomerId().getValue(),
         cartItems: {
           createMany: {
-            data: cart.items.map((item) => ({
-              id: item.id.value,
-              price: item.unitPrice.value,
-              productId: item.productId.value,
-              quantity: item.quantity.value,
+            data: cart.getItems().map((item) => ({
+              id: item.getId().getValue(),
+              price: item.getUnitPrice().getValue(),
+              productId: item.getProductId().getValue(),
+              quantity: item.getQuantity().getValue(),
             })),
           },
         },
@@ -56,18 +56,18 @@ export class PrismaCartRepository implements CartRepository {
 
   async update(cart: Cart): Promise<void> {
     await this.prismaClient.cart.update({
-      where: { id: cart.id.value },
+      where: { id: cart.getId().getValue() },
       data: {
-        id: cart.id.value,
-        customerId: cart.customerId.value,
+        id: cart.getId().getValue(),
+        customerId: cart.getCustomerId().getValue(),
         cartItems: {
           createMany: {
-            data: cart.items.map((item) => ({
-              id: item.id.value,
-              cartId: cart.id.value,
-              price: item.unitPrice.value,
-              productId: item.productId.value,
-              quantity: item.quantity.value,
+            data: cart.getItems().map((item) => ({
+              id: item.getId().getValue(),
+              cartId: cart.getId().getValue(),
+              price: item.getUnitPrice().getValue(),
+              productId: item.getProductId().getValue(),
+              quantity: item.getQuantity().getValue(),
             })),
           },
         },

@@ -16,83 +16,83 @@ describe("cart-item", () => {
     });
 
     const sut = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 245 }).value as Money,
-      quantity: Quantity.create({ value: 10 }).value as Quantity,
-    }).value as CartItem;
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 245 }).getValue() as Money,
+      quantity: Quantity.create({ value: 10 }).getValue() as Quantity,
+    }).getValue() as CartItem;
 
-    expect(sut.productId).toStrictEqual(cartItem.id);
-    expect(sut.unitPrice).toStrictEqual(cartItem.unitPrice);
-    expect(sut.quantity).toStrictEqual(cartItem.quantity);
+    expect(sut.getProductId()).toStrictEqual(cartItem.getId());
+    expect(sut.getUnitPrice()).toStrictEqual(cartItem.getUnitPrice());
+    expect(sut.getQuantity()).toStrictEqual(cartItem.getQuantity());
   });
 
   it("should increase quantity", () => {
     const sut = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 245 }).value as Money,
-      quantity: Quantity.create({ value: 10 }).value as Quantity,
-    }).value as CartItem;
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 245 }).getValue() as Money,
+      quantity: Quantity.create({ value: 10 }).getValue() as Quantity,
+    }).getValue() as CartItem;
 
-    sut.increaseQuantity(Quantity.create({ value: 4 }).value as Quantity);
+    sut.increaseQuantity(Quantity.create({ value: 4 }).getValue() as Quantity);
 
-    expect(sut.quantity.value).toBe(14);
+    expect(sut.getQuantity().getValue()).toBe(14);
   });
 
   it("should decrease quantity", () => {
     const sut = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 245 }).value as Money,
-      quantity: Quantity.create({ value: 10 }).value as Quantity,
-    }).value as CartItem;
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 245 }).getValue() as Money,
+      quantity: Quantity.create({ value: 10 }).getValue() as Quantity,
+    }).getValue() as CartItem;
 
-    sut.decreaseQuantity(Quantity.create({ value: 2 }).value as Quantity);
+    sut.decreaseQuantity(Quantity.create({ value: 2 }).getValue() as Quantity);
 
-    expect(sut.quantity.value).toBe(8);
+    expect(sut.getQuantity().getValue()).toBe(8);
   });
 
   it("should return the total price", () => {
     const cartItem = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 35.99 }).value as Money,
-      quantity: Quantity.create({ value: 10 }).value as Quantity,
-    }).value as CartItem;
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 35.99 }).getValue() as Money,
+      quantity: Quantity.create({ value: 10 }).getValue() as Quantity,
+    }).getValue() as CartItem;
 
-    cartItem.increaseQuantity(Quantity.create({ value: 16 }).value as Quantity);
-    cartItem.decreaseQuantity(Quantity.create({ value: 14 }).value as Quantity);
+    cartItem.increaseQuantity(Quantity.create({ value: 16 }).getValue() as Quantity);
+    cartItem.decreaseQuantity(Quantity.create({ value: 14 }).getValue() as Quantity);
 
-    const sut = cartItem.totalPrice().value as Money;
+    const sut = cartItem.getTotalPrice().getValue() as Money;
 
-    expect(sut.value).toBe(431.88);
+    expect(sut.getValue()).toBe(431.88);
   });
 
   it("should fail if quantity is less than one", () => {
     const failure = new Failure("CART_ITEM_QUANTITY_CANNOT_BE_LESS_THAN_ONE");
     const sut = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 245 }).value as Money,
-      quantity: Quantity.create({ value: 0 }).value as Quantity,
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 245 }).getValue() as Money,
+      quantity: Quantity.create({ value: 0 }).getValue() as Quantity,
     });
 
-    expect(sut.value).toStrictEqual(failure);
+    expect(sut.getValue()).toStrictEqual(failure);
   });
 
   it("should fail if the quantity to be decreased is greater than or equal to the current quantity", () => {
     const failure = new Failure("CART_ITEM_QUANTITY_CANNOT_BE_LESS_THAN_ONE");
     const cartItem1 = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 245 }).value as Money,
-      quantity: Quantity.create({ value: 4 }).value as Quantity,
-    }).value as CartItem;
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 245 }).getValue() as Money,
+      quantity: Quantity.create({ value: 4 }).getValue() as Quantity,
+    }).getValue() as CartItem;
     const cartItem2 = CartItem.create({
-      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).value as UUID,
-      unitPrice: Money.create({ value: 245 }).value as Money,
-      quantity: Quantity.create({ value: 2 }).value as Quantity,
-    }).value as CartItem;
+      productId: UUID.create({ value: "c8d29b35-b5d7-4e3c-8688-42c66efb6c72" }).getValue() as UUID,
+      unitPrice: Money.create({ value: 245 }).getValue() as Money,
+      quantity: Quantity.create({ value: 2 }).getValue() as Quantity,
+    }).getValue() as CartItem;
 
-    const sut1 = cartItem1.decreaseQuantity(Quantity.create({ value: 4 }).value as Quantity);
-    const sut2 = cartItem2.decreaseQuantity(Quantity.create({ value: 8 }).value as Quantity);
+    const sut1 = cartItem1.decreaseQuantity(Quantity.create({ value: 4 }).getValue() as Quantity);
+    const sut2 = cartItem2.decreaseQuantity(Quantity.create({ value: 8 }).getValue() as Quantity);
 
-    expect(sut1.value).toStrictEqual(failure);
-    expect(sut2.value).toStrictEqual(failure);
+    expect(sut1.getValue()).toStrictEqual(failure);
+    expect(sut2.getValue()).toStrictEqual(failure);
   });
 });

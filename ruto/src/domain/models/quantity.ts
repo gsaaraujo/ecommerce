@@ -1,17 +1,12 @@
 import { Failure } from "@shared/helpers/failure";
+import { ValueObject } from "@shared/helpers/value-object";
 import { Either, Left, Right } from "@shared/helpers/either";
 
 type QuantityProps = {
   value: number;
 };
 
-export class Quantity {
-  private readonly props: QuantityProps;
-
-  private constructor(props: QuantityProps) {
-    this.props = props;
-  }
-
+export class Quantity extends ValueObject<QuantityProps> {
   public static create(props: QuantityProps): Either<Failure, Quantity> {
     if (typeof props.value !== "number") {
       const failure = new Failure("QUANTITY_MUST_BE_NUMBER");
@@ -36,7 +31,7 @@ export class Quantity {
     return new Quantity(props);
   }
 
-  public get value(): number {
+  public getValue(): number {
     return this.props.value;
   }
 }

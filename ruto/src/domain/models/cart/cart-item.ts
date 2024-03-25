@@ -14,7 +14,8 @@ type CartItemProps = {
 
 export class CartItem extends Entity<CartItemProps> {
   public static create(props: CartItemProps): Either<Failure, CartItem> {
-    if (props.quantity.value < 1) {
+    const MINIMUM_QUANTITY = 1;
+    if (props.quantity.getValue() < MINIMUM_QUANTITY) {
       const failure = new Failure("CART_ITEM_QUANTITY_CANNOT_BE_LESS_THAN_ONE");
       return Left.create(failure);
     }
@@ -28,22 +29,22 @@ export class CartItem extends Entity<CartItemProps> {
   }
 
   public increaseQuantity(quantity: Quantity): Either<Failure, void> {
-    const sum = this.props.quantity.value + quantity.value;
-
+    const sum = this.props.quantity.getValue() + quantity.getValue();
     const quantityOrFailure = Quantity.create({ value: sum });
 
     if (quantityOrFailure.isLeft()) {
-      return Left.create(quantityOrFailure.value);
+      return Left.create(quantityOrFailure.getValue());
     }
 
-    this.props.quantity = quantityOrFailure.value;
+    this.props.quantity = quantityOrFailure.getValue();
     return Right.create(undefined);
   }
 
   public decreaseQuantity(quantity: Quantity): Either<Failure, void> {
-    const difference = this.props.quantity.value - quantity.value;
+    const difference = this.props.quantity.getValue() - quantity.getValue();
 
-    if (difference < 1) {
+    const MINIMUM_QUANTITY = 1;
+    if (difference < MINIMUM_QUANTITY) {
       const failure = new Failure("CART_ITEM_QUANTITY_CANNOT_BE_LESS_THAN_ONE");
       return Left.create(failure);
     }
@@ -51,26 +52,26 @@ export class CartItem extends Entity<CartItemProps> {
     const quantityOrFailure = Quantity.create({ value: difference });
 
     if (quantityOrFailure.isLeft()) {
-      return Left.create(quantityOrFailure.value);
+      return Left.create(quantityOrFailure.getValue());
     }
 
-    this.props.quantity = quantityOrFailure.value;
+    this.props.quantity = quantityOrFailure.getValue();
     return Right.create(undefined);
   }
 
-  public totalPrice(): Either<Failure, Money> {
-    return Money.create({ value: this.props.unitPrice.value * this.props.quantity.value });
+  public getTotalPrice(): Either<Failure, Money> {
+    return Money.create({ value: this.props.unitPrice.getValue() * this.props.quantity.getValue() });
   }
 
-  get productId(): UUID {
+  public getProductId(): UUID {
     return this.props.productId;
   }
 
-  get unitPrice(): Money {
+  public getUnitPrice(): Money {
     return this.props.unitPrice;
   }
 
-  get quantity(): Quantity {
+  public getQuantity(): Quantity {
     return this.props.quantity;
   }
 }

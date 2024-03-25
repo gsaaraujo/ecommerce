@@ -33,33 +33,33 @@ export class AddProductToCart {
     const unitPrice = Money.create({ value: input.unitPrice });
     const quantity = Quantity.create({ value: input.quantity });
 
-    if (customerId.isLeft()) return Left.create(customerId.value);
-    if (productId.isLeft()) return Left.create(productId.value);
-    if (unitPrice.isLeft()) return Left.create(unitPrice.value);
-    if (quantity.isLeft()) return Left.create(quantity.value);
+    if (customerId.isLeft()) return Left.create(customerId.getValue());
+    if (productId.isLeft()) return Left.create(productId.getValue());
+    if (unitPrice.isLeft()) return Left.create(unitPrice.getValue());
+    if (quantity.isLeft()) return Left.create(quantity.getValue());
 
-    const customerExists = await this.customerGateway.exists(customerId.value.value);
+    const customerExists = await this.customerGateway.exists(customerId.getValue().getValue());
 
     if (!customerExists) {
       const failure = new Failure("CUSTOMER_NOT_FOUND");
       return Left.create(failure);
     }
 
-    const cart: Cart | null = await this.cartRepository.findOneByCustomerId(customerId.value.value);
+    const cart: Cart | null = await this.cartRepository.findOneByCustomerId(customerId.getValue().getValue());
 
     if (!cart) {
-      const newCart: Either<Failure, Cart> = Cart.create({ customerId: customerId.value });
+      const newCart: Either<Failure, Cart> = Cart.create({ customerId: customerId.getValue() });
 
       if (newCart.isLeft()) {
-        return Left.create(newCart.value);
+        return Left.create(newCart.getValue());
       }
 
-      newCart.value.addItem(productId.value, unitPrice.value, quantity.value);
-      await this.cartRepository.create(newCart.value);
+      newCart.getValue().addItem(productId.getValue(), unitPrice.getValue(), quantity.getValue());
+      await this.cartRepository.create(newCart.getValue());
       return Right.create(undefined);
     }
 
-    cart.addItem(productId.value, unitPrice.value, quantity.value);
+    cart.addItem(productId.getValue(), unitPrice.getValue(), quantity.getValue());
     await this.cartRepository.update(cart);
     return Right.create(undefined);
   }

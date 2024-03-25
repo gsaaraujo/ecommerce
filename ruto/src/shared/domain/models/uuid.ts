@@ -23,7 +23,7 @@ export class UUID extends ValueObject<UUIDProps> {
     return new UUID(props);
   }
 
-  public get value(): string {
+  public getValue(): string {
     return this.props.value;
   }
 }

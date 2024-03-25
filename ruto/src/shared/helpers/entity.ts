@@ -12,10 +12,10 @@ export abstract class Entity<T> {
   }
 
   public isEquals(entity: Entity<T>): boolean {
-    return entity.id.isEquals(this.id);
+    return entity.getId().isEquals(this.getId());
   }
 
-  public get id(): UUID {
+  public getId(): UUID {
     return this._id;
   }
 }

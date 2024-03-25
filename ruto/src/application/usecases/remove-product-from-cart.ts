@@ -44,10 +44,10 @@ export class RemoveProductFromCart {
       return Left.create(failure);
     }
 
-    const removeOrFail = cart.removeItem(productId.value);
+    const removeOrFail = cart.removeItem(productId.getValue());
 
     if (removeOrFail.isLeft()) {
-      const failure = removeOrFail.value;
+      const failure = removeOrFail.getValue();
       return Left.create(failure);
     }
 
